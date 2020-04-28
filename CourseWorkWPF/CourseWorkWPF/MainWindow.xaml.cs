@@ -380,6 +380,7 @@ namespace CourseWorkWPF
                     xx2 = $@"\frac{{{negbi}+\sqrt{{{dis1}}}}}{{{2}}}",
                     xx3 = $@"\frac{{{negfi}-\sqrt{{{dis2}}}}}{{{2}}}",
                     xx4 = $@"\frac{{{negfi}+\sqrt{{{dis2}}}}}{{{2}}}";
+                // Рассматриваем все возможные варианты взаимного расположения корней на прямой
                 if (sgn1 == @"\leq")
                 {
                     if (sgn2 == @"\leq")
@@ -389,19 +390,44 @@ namespace CourseWorkWPF
                             var.Formula = "x = " + xx2;
                         }
 
-                        if (xx1 == x4)
-                        {
-                            var.Formula = $@"x = {xx4}";
-                        }
-
-                        if (x2 <= x4 && x2>x3 && xx1 <= x3)
+                        if (x2 < x4 && x2>x3 && xx1 < x3)
                         {
                             var.Formula = $@"x\in [{xx3},{xx2}]";
                         }
 
-                        if (x2 <= x4 && x2>x3 && xx1 > x3)
+                        if (x2 < x4 && x2 > x3 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx2}]";
+                        }
+
+                        if (x2 < x4 && x2>x3 && xx1 > x3)
                         {
                             var.Formula = $@"x\in [{xxx1},{xx2}]";
+                        }
+
+                        if (x2 == x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx2}]";
+                        }
+
+                        if (x2 == x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx2}]";
+                        }
+
+                        if (x2 == x4 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx2}]";
+                        }
+
+                        if (x2>x4 && xx1<x3)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx4}]";
+                        }
+
+                        if (x2 > x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx4}]";
                         }
 
                         if (x2 > x4 && xx1 < x4 && xx1>x3)
@@ -409,37 +435,47 @@ namespace CourseWorkWPF
                             var.Formula = $@"x\in [{xxx1},{xx4}]";
                         }
 
-                        if (x3 > xx1 && x4 <= x2)
+                        if (xx1 == x4)
                         {
-                            var.Formula = $@"x\in [{xx3},{xx4}]";
+                            var.Formula = $@"x = {xx4}";
                         }
                     }
 
                     if (sgn2 == @"\lt")
                     {
-                        if (x2 < x4 && x2>x3 && xx1 <= x3)
+                        if (x2 < x4 && x2 > x3 && xx1 < x3)
                         {
                             var.Formula = $@"x\in ({xx3},{xx2}]";
                         }
 
-                        if (x2 == x4 && xx1 <= x3)
+                        if (x2 < x4 && x2 > x3 && xx1 == x3)
                         {
-                            var.Formula = $@"x\in ({xx3},{xx4})";
+                            var.Formula = $@"x\in ({xx3},{xx2}]";
                         }
 
-                        if (x2 < x4 && xx1 > x3)
+                        if (x2 < x4 && x2 > x3 && xx1 > x3)
                         {
                             var.Formula = $@"x\in [{xxx1},{xx2}]";
                         }
 
-                        if (x2 == x4 && xx1 > x3)
+                        if (x2 == x4 && xx1 < x3)
                         {
-                            var.Formula = $@"x\in [{xxx1},{xx4})";
+                            var.Formula = $@"x\in ({xx3},{xx2})";
                         }
 
-                        if (x2 > x4 && xx1 < x4 && xx1>x3)
+                        if (x2 == x4 && xx1 == x3)
                         {
-                            var.Formula = $@"x\in [{xxx1},{xx4})";
+                            var.Formula = $@"x\in ({xxx1},{xx2})";
+                        }
+
+                        if (x2 == x4 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx2})";
+                        }
+
+                        if (x2 > x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx4})";
                         }
 
                         if (x2 > x4 && xx1 == x3)
@@ -447,9 +483,9 @@ namespace CourseWorkWPF
                             var.Formula = $@"x\in ({xx3},{xx4})";
                         }
 
-                        if (x3 > xx1 && x4 < x2)
+                        if (x2 > x4 && xx1 < x4 && xx1 > x3)
                         {
-                            var.Formula = $@"x\in ({xx3},{xx4})";
+                            var.Formula = $@"x\in [{xxx1},{xx4})";
                         }
                     }
 
@@ -500,7 +536,12 @@ namespace CourseWorkWPF
                             var.Formula = $@"x\in [{xx4},{xx2}]\cup{{{xx3}}}";
                         }
 
-                        if (x2 > x4 && xx1 > x3 && xx1 <= x4)
+                        if (x2 > x4 && xx1 > x3 && xx1 < x4)
+                        {
+                            var.Formula = $@"x\in [{xx4},{xx2}]";
+                        }
+
+                        if (x2 > x4 && xx1 == x4)
                         {
                             var.Formula = $@"x\in [{xx4},{xx2}]";
                         }
@@ -543,7 +584,12 @@ namespace CourseWorkWPF
                             var.Formula = $@"x\in ({xx4},{xx2}]";
                         }
 
-                        if (x2 > x4 && xx1 > x3 && xx1 <= x4)
+                        if (x2 > x4 && xx1 > x3 && xx1 < x4)
+                        {
+                            var.Formula = $@"x\in ({xx4},{xx2}]";
+                        }
+
+                        if (x2 > x4 && xx1 == x4)
                         {
                             var.Formula = $@"x\in ({xx4},{xx2}]";
                         }
@@ -559,22 +605,194 @@ namespace CourseWorkWPF
                 {
                     if (sgn2 == @"\leq")
                     {
-                        
+                        if (x2 < x4 && x2 > x3 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx2})";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx2})";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx2})";
+                        }
+
+                        if (x2 == x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx2})";
+                        }
+
+                        if (x2 == x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx2})";
+                        }
+
+                        if (x2 == x4 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx2})";
+                        }
+
+                        if (x2 > x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx4}]";
+                        }
+
+                        if (x2 > x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx4}]";
+                        }
+
+                        if (x2 > x4 && xx1 < x4 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx4}]";
+                        }
                     }
 
                     if (sgn2 == @"\lt")
                     {
-                        
+                        if (x2 < x4 && x2 > x3 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx2})";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx2})";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx2})";
+                        }
+
+                        if (x2 == x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx2})";
+                        }
+
+                        if (x2 == x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx2})";
+                        }
+
+                        if (x2 == x4 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx2})";
+                        }
+
+                        if (x2 > x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx4})";
+                        }
+
+                        if (x2 > x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx4})";
+                        }
+
+                        if (x2 > x4 && xx1 < x4 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx4})";
+                        }
                     }
 
                     if (sgn2 == @"\geq")
                     {
-                       
+                        if (x2 < x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx2})";
+                        }
+
+                        if (x2 == x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx2})";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx3}]";
+                        }
+
+                        if (x2 == x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx3}]";
+                        }
+
+                        if (x2 > x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx3}]\cup[{xx4},{xx2})";
+                        }
+
+                        if (x2 > x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in [{xx4},{xx2})";
+                        }
+
+                        if (x2 > x4 && xx1 > x3 && xx1 < x4)
+                        {
+                            var.Formula = $@"x\in [{xx4},{xx2})";
+                        }
+
+                        if (x2 > x4 && xx1 == x4)
+                        {
+                            var.Formula = $@"x\in ({xx4},{xx2})";
+                        }
+
+                        if (xx1 > x4)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx2})";
+                        }
                     }
 
                     if (sgn2 == @"\gt")
                     {
-                        
+                        if (x2 < x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx2})";
+                        }
+
+                        if (x2 == x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx2})";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx3})";
+                        }
+
+                        if (x2 == x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx3})";
+                        }
+
+                        if (x2 > x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx3})\cup({xx4},{xx2})";
+                        }
+
+                        if (x2 > x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in ({xx4},{xx2})";
+                        }
+
+                        if (x2 > x4 && xx1 > x3 && xx1 < x4)
+                        {
+                            var.Formula = $@"x\in ({xx4},{xx2})";
+                        }
+
+                        if (x2 > x4 && xx1 == x4)
+                        {
+                            var.Formula = $@"x\in ({xx4},{xx2})";
+                        }
+
+                        if (xx1 > x4)
+                        {
+                            var.Formula = $@"x\in ({xxx1},{xx2})";
+                        }
                     }
                 }
 
@@ -582,22 +800,249 @@ namespace CourseWorkWPF
                 {
                     if (sgn2 == @"\leq")
                     {
-                        
+                        if (x4 < xx1)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx4}]";
+                        }
+
+                        if (x4 == xx1)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx4}]";
+                        }
+
+                        if (x4 < x2 && x4 > xx1 && x3 < xx1)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xxx1}]";
+                        }
+
+                        if (x4 < x2 && xx1 == x3)
+                        {
+                            var.Formula = $@"x = {xxx1}";
+                        }
+
+                        if (x2 == x4 && x3 < xx1)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xxx1}]\cup{{{xx4}}}";
+                        }
+
+                        if (x2 == x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in {{{xx2},{xx3}}}";
+                        }
+
+                        if (x2 == x4 && x3 > xx1)
+                        {
+                            var.Formula = $@"x = {xx2}";
+                        }
+
+                        if (x4 > x2 && x3 < xx1)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xxx1}]\cup[{xx2},{xx4}]";
+                        }
+
+                        if (x4 > x2 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in [{xx2},{xx4}]\cup{{{xxx1}}}";
+                        }
+
+                        if (x4 > x2 && x3 > xx1 && x3 < x2)
+                        {
+                            var.Formula = $@"x\in [{xx2},{xx4}]";
+                        }
+
+                        if (x4 > x2 && x3 == x2)
+                        {
+                            var.Formula = $@"x\in [{xx2},{xx4}]";
+                        }
+
+                        if (x3 > x2)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx4}]";
+                        }
                     }
 
                     if (sgn2 == @"\lt")
                     {
-                        
+                        if (x4 < xx1)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx4})";
+                        }
+
+                        if (x4 == xx1)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx4})";
+                        }
+
+                        if (x4 < x2 && x4 > xx1 && x3 < xx1)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xxx1}]";
+                        }
+
+                        if (x2 == x4 && x3 < xx1)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xxx1}]";
+                        }
+
+                        if (x4 > x2 && x3 < xx1)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xxx1}]\cup[{xx2},{xx4})";
+                        }
+
+                        if (x4 > x2 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in [{xx2},{xx4})";
+                        }
+
+                        if (x4 > x2 && x3 > xx1 && x3 < x2)
+                        {
+                            var.Formula = $@"x\in [{xx2},{xx4})";
+                        }
+
+                        if (x4 > x2 && x3 == x2)
+                        {
+                            var.Formula = $@"x\in ({xx2},{xx4})";
+                        }
+
+                        if (x3 > x2)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx4})";
+                        }
                     }
 
                     if (sgn2 == @"\geq")
                     {
-                        
+                        if (x2 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1}]\cup[{xx2},{xx3}]\cup[{xx4},\infty)";
+                        }
+
+                        if (x2 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1}]\cup{{{xx2}}}\cup[{xx4},\infty)";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1}]\cup[{xx4},\infty)";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1}]\cup[{xx4},\infty)";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3}]\cup[{xx4},\infty)";
+                        }
+
+                        if (x2 == x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1}]\cup[{xx4},\infty)";
+                        }
+
+                        if (x2 == x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3}]\cup[{xx4},\infty)";
+                        }
+
+                        if (x2 == x4 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3}]\cup[{xx4},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1}]\cup[{xx2},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1}]\cup[{xx2},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 > x3 && xx1 < x4)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3}]\cup[{xx2},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 == x4)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3}]\cup[{xx2},\infty)";
+                        }
+
+                        if (xx1 > x4)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3}]\cup[{xx4},{xxx1}]\cup[{xx2},\infty)";
+                        }
                     }
 
                     if (sgn2 == @"\gt")
                     {
-                       
+                        if (x2 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1}]\cup[{xx2},{xx3})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1}]\cup({xx4},\infty)";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1}]\cup({xx4},\infty)";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 == x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1}]\cup({xx4},\infty)";
+                        }
+
+                        if (x2 == x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 == x4 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1}]\cup[{xx2},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup[{xx2},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 > x3 && xx1 < x4)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3})\cup[{xx2},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 == x4)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3})\cup[{xx2},\infty)";
+                        }
+
+                        if (xx1 > x4)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3})\cup({xx4},{xxx1}]\cup[{xx2},\infty)";
+                        }
                     }
                 }
 
@@ -605,22 +1050,234 @@ namespace CourseWorkWPF
                 {
                     if (sgn2 == @"\leq")
                     {
-                       
+                        if (x4 < xx1)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx4}]";
+                        }
+
+                        if (x4 == xx1)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx4})";
+                        }
+
+                        if (x4 < x2 && x4 > xx1 && x3 < xx1)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xxx1})";
+                        }
+
+                        if (x2 == x4 && x3 < xx1)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xxx1})";
+                        }
+                        
+                        if (x4 > x2 && x3 < xx1)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xxx1})\cup({xx2},{xx4}]";
+                        }
+
+                        if (x4 > x2 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in ({xx2},{xx4}]";
+                        }
+
+                        if (x4 > x2 && x3 > xx1 && x3 < x2)
+                        {
+                            var.Formula = $@"x\in ({xx2},{xx4}]";
+                        }
+
+                        if (x4 > x2 && x3 == x2)
+                        {
+                            var.Formula = $@"x\in ({xx2},{xx4}]";
+                        }
+
+                        if (x3 > x2)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx4}]";
+                        }
                     }
 
                     if (sgn2 == @"\lt")
                     {
-                        
+                        if (x4 < xx1)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx4})";
+                        }
+
+                        if (x4 == xx1)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx4})";
+                        }
+
+                        if (x4 < x2 && x4 > xx1 && x3 < xx1)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xxx1})";
+                        }
+
+                        if (x2 == x4 && x3 < xx1)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xxx1})";
+                        }
+
+                        if (x4 > x2 && x3 < xx1)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xxx1})\cup({xx2},{xx4})";
+                        }
+
+                        if (x4 > x2 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in ({xx2},{xx4})";
+                        }
+
+                        if (x4 > x2 && x3 > xx1 && x3 < x2)
+                        {
+                            var.Formula = $@"x\in ({xx2},{xx4})";
+                        }
+
+                        if (x4 > x2 && x3 == x2)
+                        {
+                            var.Formula = $@"x\in ({xx2},{xx4})";
+                        }
+
+                        if (x3 > x2)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx4})";
+                        }
                     }
 
                     if (sgn2 == @"\geq")
                     {
-                       
+                        if (x2 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup({xx2},{xx3}]\cup[{xx4},\infty)";
+                        }
+
+                        if (x2 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup[{xx4},\infty)";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup[{xx4},\infty)";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup[{xx4},\infty)";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3}]\cup[{xx4},\infty)";
+                        }
+
+                        if (x2 == x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 == x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 == x4 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3}]\cup({xx4},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup({xx2},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup({xx2},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 > x3 && xx1 < x4)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3}]\cup({xx2},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 == x4)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3}]\cup({xx2},\infty)";
+                        }
+
+                        if (xx1 > x4)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3}]\cup[{xx4},{xxx1})\cup({xx2},\infty)";
+                        }
                     }
 
                     if (sgn2 == @"\gt")
                     {
-                        
+                        if (x2 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup({xx2},{xx3})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 == x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 == x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 == x4 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3})\cup({xx4},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup({xx2},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xxx1})\cup({xx2},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 > x3 && xx1 < x4)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3})\cup({xx2},\infty)";
+                        }
+
+                        if (x2 > x4 && xx1 == x4)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3})\cup({xx2},\infty)";
+                        }
+
+                        if (xx1 > x4)
+                        {
+                            var.Formula = $@"x\in (-\infty,{xx3})\cup({xx4},{xxx1})\cup({xx2},\infty)";
+                        }
                     }
                 }
             }
