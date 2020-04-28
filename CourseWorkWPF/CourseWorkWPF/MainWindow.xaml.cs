@@ -210,7 +210,7 @@ namespace CourseWorkWPF
         {
             sgn1 = eqsigns[gen.Next(3)];
             sgn2 = eqsigns[gen.Next(3)];
-            // Генерируем коэффициенты квадратного уравнения, пока дискрминант не будет больше или равен нулю
+            // Генерируем коэффициенты квадратного уравнения, пока дискрминант не будет больше нуля
             do
             {
                 ai = 1;
@@ -221,8 +221,8 @@ namespace CourseWorkWPF
                 fi = gen.Next(-10, 10);
                 gi = gen.Next(-10, 10);
                 hi = gen.Next(-10, 10);
-                dis1 = bi * bi - 4 * ai * ci;
-                dis2 = fi * fi - 4 * gi * ei;
+                dis1 = bi * bi - 4 * ai * (ci-di);
+                dis2 = fi * fi - 4 * (gi-hi)* ei;
                 xx1 = (-bi - Math.Pow(dis1, 0.5)) / 2;
                 x2 = (-bi + Math.Pow(dis1, 0.5)) / 2;
                 x3 = (-fi - Math.Pow(dis2, 0.5)) / 2;
@@ -379,7 +379,7 @@ namespace CourseWorkWPF
                 string xxx1 = $@"\frac{{{negbi}-\sqrt{{{dis1}}}}}{{{2}}}",
                     xx2 = $@"\frac{{{negbi}+\sqrt{{{dis1}}}}}{{{2}}}",
                     xx3 = $@"\frac{{{negfi}-\sqrt{{{dis2}}}}}{{{2}}}",
-                    xx4 = $@"\frac{{{negfi}-\sqrt{{{dis2}}}}}{{{2}}}";
+                    xx4 = $@"\frac{{{negfi}+\sqrt{{{dis2}}}}}{{{2}}}";
                 if (sgn1 == @"\leq")
                 {
                     if (sgn2 == @"\leq")
@@ -389,45 +389,169 @@ namespace CourseWorkWPF
                             var.Formula = "x = " + xx2;
                         }
 
-                        if (x2 <= x4 && xx1 <= x3)
-                        {
-                            var.Formula = $@"x\in [{xx3},{xx2}]";
-                        }
-
-                        if (x2 <= x4 && xx1 > x3)
-                        {
-                            var.Formula = $@"x\in [{xxx1},{xx2}]";
-                        }
-
-                        if (x2 > x4 && xx1 < x4)
-                        {
-                            var.Formula = $@"x\in [{xxx1},{xx4}]";
-                        }
-
                         if (xx1 == x4)
                         {
                             var.Formula = $@"x = {xx4}";
                         }
 
+                        if (x2 <= x4 && x2>x3 && xx1 <= x3)
+                        {
+                            var.Formula = $@"x\in [{xx3},{xx2}]";
+                        }
+
+                        if (x2 <= x4 && x2>x3 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx2}]";
+                        }
+
+                        if (x2 > x4 && xx1 < x4 && xx1>x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx4}]";
+                        }
+
                         if (x3 > xx1 && x4 <= x2)
                         {
-                            var.Formula = $@"x\in [{xx3},{xx4}";
+                            var.Formula = $@"x\in [{xx3},{xx4}]";
                         }
                     }
 
                     if (sgn2 == @"\lt")
                     {
-                        
+                        if (x2 < x4 && x2>x3 && xx1 <= x3)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx2}]";
+                        }
+
+                        if (x2 == x4 && xx1 <= x3)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx4})";
+                        }
+
+                        if (x2 < x4 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx2}]";
+                        }
+
+                        if (x2 == x4 && xx1 > x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx4})";
+                        }
+
+                        if (x2 > x4 && xx1 < x4 && xx1>x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx4})";
+                        }
+
+                        if (x2 > x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx4})";
+                        }
+
+                        if (x3 > xx1 && x4 < x2)
+                        {
+                            var.Formula = $@"x\in ({xx3},{xx4})";
+                        }
                     }
 
                     if (sgn2 == @"\geq")
                     {
-                        
+                        if (x2 < x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx2}]";
+                        }
+
+                        if (x2 == x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx2}]";
+                        }
+
+                        if (x2 < x4 && x2>x3 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx3}]";
+                        }
+
+                        if (x2 < x4 && x3 == xx1)
+                        {
+                            var.Formula = $@"x = {xx3}";
+                        }
+
+                        if (x2 == x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx3}]\cup{{{xx2}}}";
+                        }
+
+                        if (x2 == x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in {{{xx4},{xxx1}}}";
+                        }
+
+                        if (x2 == x4 && xx1 > x3)
+                        {
+                            var.Formula = $@"x = {xx4}";
+                        }
+
+                        if (x2 > x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx3}]\cup[{xx4},{xx2}]";
+                        }
+
+                        if (x2 > x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in [{xx4},{xx2}]\cup{{{xx3}}}";
+                        }
+
+                        if (x2 > x4 && xx1 > x3 && xx1 <= x4)
+                        {
+                            var.Formula = $@"x\in [{xx4},{xx2}]";
+                        }
+
+                        if (xx1 > x4)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx2}]";
+                        }
                     }
 
                     if (sgn2 == @"\gt")
                     {
-                        
+                        if (x2 < x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx2}]";
+                        }
+
+                        if (x2 == x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx2})";
+                        }
+
+                        if (x2 < x4 && x2 > x3 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx3})";
+                        }
+
+                        if (x2 == x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx3})";
+                        }
+
+                        if (x2 > x4 && xx1 < x3)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx3})\cup({xx4},{xx2}]";
+                        }
+
+                        if (x2 > x4 && xx1 == x3)
+                        {
+                            var.Formula = $@"x\in ({xx4},{xx2}]";
+                        }
+
+                        if (x2 > x4 && xx1 > x3 && xx1 <= x4)
+                        {
+                            var.Formula = $@"x\in ({xx4},{xx2}]";
+                        }
+
+                        if (xx1 > x4)
+                        {
+                            var.Formula = $@"x\in [{xxx1},{xx2}]";
+                        }
                     }
                 }
 
@@ -501,8 +625,6 @@ namespace CourseWorkWPF
                 }
             }
         }
-
-        private static int p;
 
         private void Cbox_DropDownOpened(object sender, EventArgs e)
         {

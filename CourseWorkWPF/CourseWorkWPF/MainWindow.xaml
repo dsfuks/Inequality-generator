@@ -12,7 +12,7 @@
         <Button x:Name="butgen" Margin="47,236,510,180" Background="Orange" Click="Button_Click_1" FontSize="20">Сгенерировать задачи</Button>
         <controls:FormulaControl x:Name="formula" Formula = " \left{   \right." Margin="47,0,557,371" Height="96" VerticalAlignment="Bottom"/>
         <controls:FormulaControl x:Name="formula2" Formula = " \left{   \right." Margin="47,0,557,355" Height="88" VerticalAlignment="Bottom"/>
-        <controls:FormulaControl x:Name="var" Formula = "x \in" Margin="10,0,553,198" Height="96" VerticalAlignment="Bottom"/>
+        <controls:FormulaControl x:Name="var" Formula = "x \in" Margin="10,0,10,198" Height="96" VerticalAlignment="Bottom"/>
         <Image x:Name="bracket" Source="Resources/left2.png" Margin="10,0,0,402" RenderTransformOrigin="0.053,2.785" HorizontalAlignment="Left" Width="47" Height="88" VerticalAlignment="Bottom"/>
         <ComboBox x:Name="cbox" HorizontalAlignment="Right" VerticalAlignment="Top" Width="184" Margin="0,236,321,0" Text="хуй" DropDownOpened="Cbox_DropDownOpened" DropDownClosed="Cbox_DropDownClosed">
 
