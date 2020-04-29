@@ -6,21 +6,25 @@
         xmlns:controls="clr-namespace:WpfMath.Controls;assembly=WpfMath"
         xmlns:local="clr-namespace:CourseWorkWPF"
         mc:Ignorable="d"
-        Title="MainWindow" ResizeMode="NoResize">
+        Title="Генератор задач" ResizeMode="NoResize">
     <Grid Margin="0,0,0,4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="21*"/>
+            <ColumnDefinition Width="106*"/>
+        </Grid.ColumnDefinitions>
 
-        <Button x:Name="butgen" Margin="47,236,510,180" Background="Orange" Click="Button_Click_1" FontSize="20">Сгенерировать задачи</Button>
-        <controls:FormulaControl x:Name="formula" Formula = " \left{   \right." Margin="47,0,557,371" Height="96" VerticalAlignment="Bottom"/>
-        <controls:FormulaControl x:Name="formula2" Formula = " \left{   \right." Margin="47,0,557,355" Height="88" VerticalAlignment="Bottom"/>
-        <controls:FormulaControl x:Name="var" Formula = "x \in" Margin="10,0,10,198" Height="96" VerticalAlignment="Bottom"/>
+        <Button x:Name="butgen" Margin="47,236,510,180" Background="Orange" Click="Button_Click_1" FontSize="20" Grid.ColumnSpan="2">Сгенерировать задачи</Button>
+        <controls:FormulaControl x:Name="formula" Formula = " \left{   \right." Margin="47,0,557,371" Height="96" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
+        <controls:FormulaControl x:Name="formula2" Formula = " \left{   \right." Margin="47,0,557,355" Height="88" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
+        <controls:FormulaControl x:Name="var" Formula = "x \in" Margin="10,0,10,198" Height="96" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
         <Image x:Name="bracket" Source="Resources/left2.png" Margin="10,0,0,402" RenderTransformOrigin="0.053,2.785" HorizontalAlignment="Left" Width="47" Height="88" VerticalAlignment="Bottom"/>
-        <ComboBox x:Name="cbox" HorizontalAlignment="Right" VerticalAlignment="Top" Width="184" Margin="0,236,321,0" Text="хуй" DropDownOpened="Cbox_DropDownOpened" DropDownClosed="Cbox_DropDownClosed">
+        <ComboBox x:Name="cbox" HorizontalAlignment="Right" VerticalAlignment="Top" Width="184" Margin="0,236,321,0" Text="хуй" DropDownOpened="Cbox_DropDownOpened" DropDownClosed="Cbox_DropDownClosed" Grid.Column="1">
 
             <TextBlock>1</TextBlock>
             <TextBlock>2</TextBlock>
             <TextBlock>3</TextBlock>
         </ComboBox>
-        <ComboBox x:Name="cbox2" HorizontalAlignment="Right" Margin="0,263,321,0" VerticalAlignment="Top" Width="184" DropDownOpened="Cbox2_DropDownOpened" DropDownClosed="Cbox2_DropDownClosed">
+        <ComboBox x:Name="cbox2" HorizontalAlignment="Right" Margin="0,263,321,0" VerticalAlignment="Top" Width="184" DropDownOpened="Cbox2_DropDownOpened" DropDownClosed="Cbox2_DropDownClosed" Grid.Column="1">
             <TextBlock>1</TextBlock>
             <TextBlock>2</TextBlock>
             <TextBlock>3</TextBlock>
@@ -32,10 +36,10 @@
             <TextBlock>9</TextBlock>
             <TextBlock>10</TextBlock>
         </ComboBox>
-        <Button x:Name="bnext" Content="&gt;&gt;" HorizontalAlignment="Left" Margin="209,155,0,0" VerticalAlignment="Top" Width="31" Height="21" Click="Bnext_Click" Background="Orange"/>
-        <Button x:Name="rest" Content="Начать заново" HorizontalAlignment="Right" VerticalAlignment="Top" Width="102" Margin="0,181,451,0" Height="38" Background="Orange" Click="Rest_Click"/>
-        <Button x:Name="exit" Content="Выйти" HorizontalAlignment="Right" VerticalAlignment="Top" Width="102" Margin="0,181,321,0" Height="38" Background="Orange" Click="Button_Click"/>
-        <Button x:Name="ansbut" Content="Показать ответ" HorizontalAlignment="Left" VerticalAlignment="Top" Width="185" Margin="19,156,0,0" Background="Orange" Click="Button_Click_2"/>
+        <Button x:Name="bnext" Content="&gt;&gt;" HorizontalAlignment="Left" Margin="83,155,0,0" VerticalAlignment="Top" Width="31" Height="21" Click="Bnext_Click" Background="Orange" Grid.Column="1"/>
+        <Button x:Name="rest" Content="Начать заново" HorizontalAlignment="Right" VerticalAlignment="Top" Width="102" Margin="0,181,451,0" Height="38" Background="Orange" Click="Rest_Click" Grid.Column="1"/>
+        <Button x:Name="exit" Content="Выйти" HorizontalAlignment="Right" VerticalAlignment="Top" Width="102" Margin="0,181,321,0" Height="38" Background="Orange" Click="Button_Click" Grid.Column="1"/>
+        <Button x:Name="ansbut" Content="Показать ответ" HorizontalAlignment="Left" VerticalAlignment="Top" Width="185" Margin="19,156,0,0" Background="Orange" Click="Button_Click_2" Grid.ColumnSpan="2"/>
 
     </Grid>
 

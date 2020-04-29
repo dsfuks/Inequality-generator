@@ -29,8 +29,11 @@ namespace CourseWorkWPF
         // Дискриминанты
         private double dis1, dis2;
 
-        // Корни квадратных уравнений
-        double xx1, x2, x3, x4;
+        // Корни уравнений
+        private double xx1, x2, x3, x4;
+
+        // Тип задачи третьего уровня
+        private int type;
 
         public MainWindow()
         {
@@ -50,16 +53,16 @@ namespace CourseWorkWPF
         }
 
         /// <summary>
-        /// Красивый вывод
+        /// Красивый вывод для задач первого уровня
         /// </summary>
-        private void BeatOut1(ref string a, ref string b, ref string c, ref string d, ref string e, ref string f)
+        private void BeatOut1(ref string a, ref string d)
         {
             if (a == "1") a = "";
             if (d == "1") d = "";
         }
 
         /// <summary>
-        /// Красивый вывод
+        /// Красивый вывод для задач второго уровня
         /// </summary>
         private void BeatOut2(ref string a, ref string b, ref string c, ref string e, ref string f, ref string g)
         {
@@ -93,7 +96,7 @@ namespace CourseWorkWPF
             d = gen.Next(1, 30).ToString();
             e = gen.Next(1, 30).ToString();
             f = gen.Next(1, 30).ToString();
-            BeatOut1(ref a, ref b, ref c, ref d, ref e, ref f);
+            BeatOut1(ref a, ref d);
             sgn1 = eqsigns[gen.Next(4)];
             formula.Formula = $"{a}x+{b} {sgn1} {c}";
             formula2.Formula = $"{d}x+{e} {sgn1} {f}";
@@ -103,7 +106,7 @@ namespace CourseWorkWPF
         /// Проверяет, имеет ли на данном наборе система неравенств решение
         /// </summary>
         /// <returns>true,если удовлетворяет</returns>
-        bool CheckQadr(string sgn1, string sgn2, double x1, double x2, double x3, double x4)
+        private bool CheckQadr(string sgn1, string sgn2, double x1, double x2, double x3, double x4)
         {
             if (sgn1 == @"\leq")
             {
@@ -221,13 +224,13 @@ namespace CourseWorkWPF
                 fi = gen.Next(-10, 10);
                 gi = gen.Next(-10, 10);
                 hi = gen.Next(-10, 10);
-                dis1 = bi * bi - 4 * ai * (ci-di);
-                dis2 = fi * fi - 4 * (gi-hi)* ei;
+                dis1 = bi * bi - 4 * ai * (ci - di);
+                dis2 = fi * fi - 4 * (gi - hi) * ei;
                 xx1 = (-bi - Math.Pow(dis1, 0.5)) / 2;
                 x2 = (-bi + Math.Pow(dis1, 0.5)) / 2;
                 x3 = (-fi - Math.Pow(dis2, 0.5)) / 2;
                 x4 = (-fi + Math.Pow(dis2, 0.5)) / 2;
-            } while (bi * bi - 4 * ai * (ci - di) <= 0 || fi * fi - 4 * ei * (gi - hi) <= 0 || ci == 0 || gi == 0 || bi == 0 || fi == 0 || !CheckQadr(sgn1,sgn2,xx1,x2,x3,x4));
+            } while (bi * bi - 4 * ai * (ci - di) <= 0 || fi * fi - 4 * ei * (gi - hi) <= 0 || ci == 0 || gi == 0 || bi == 0 || fi == 0 || !CheckQadr(sgn1, sgn2, xx1, x2, x3, x4));
 
             a = ai.ToString();
             b = bi.ToString();
@@ -241,10 +244,270 @@ namespace CourseWorkWPF
         }
 
         /// <summary>
+        /// Проверяет, имеет ли система логарифмических неравенств на данном наборе коэффициентов решения
+        /// </summary>
+        /// <param name="sgn1">Знак перового неравенства</param>
+        /// <param name="sgn2">Знак второго неравенства</param>
+        /// <param name="x2">максимальный  корень из уравнения одз</param>
+        /// <param name="x3">корень из первого неравенства</param>
+        /// <param name="x4">корень из второго неравенства</param>
+        /// <returns>true,если удовлетворяет</returns>
+        private bool CheckLog(string sgn1, string sgn2, double x2, double x3, double x4, double ai, double di)
+        {
+            if (ai < 1)
+            {
+                if (sgn1 == eqsigns[0]) sgn1 = eqsigns[1];
+                if (sgn1 == eqsigns[1]) sgn1 = eqsigns[0];
+                if (sgn1 == eqsigns[2]) sgn1 = eqsigns[3];
+                if (sgn1 == eqsigns[3]) sgn1 = eqsigns[2];
+            }
+
+            if (di < 1)
+            {
+                if (sgn2 == eqsigns[0]) sgn2 = eqsigns[1];
+                if (sgn2 == eqsigns[1]) sgn2 = eqsigns[0];
+                if (sgn2 == eqsigns[2]) sgn2 = eqsigns[3];
+                if (sgn2 == eqsigns[3]) sgn2 = eqsigns[2];
+            }
+
+            if (x2 >= Math.Min(x3, x4)) return false;
+
+            if (sgn1 == @"\leq")
+            {
+                if (sgn2 == @"\leq")
+                {
+                    return true;
+                }
+
+                if (sgn2 == @"\lt")
+                {
+                    return true;
+                }
+
+                if (sgn2 == @"\geq")
+                {
+                    if (x4 <= x3) return true;
+                }
+
+                if (sgn2 == @"\gt")
+                {
+                    if (x4 < x3) return true;
+                }
+            }
+
+            if (sgn1 == @"\lt")
+            {
+                if (sgn2 == @"\leq")
+                {
+                    return true;
+                }
+
+                if (sgn2 == @"\lt")
+                {
+                    return true;
+                }
+
+                if (sgn2 == @"\geq")
+                {
+                    if (x4 < x3) return true;
+                }
+
+                if (sgn2 == @"\gt")
+                {
+                    if (x4 < x3) return true;
+                }
+            }
+
+            if (sgn1 == @"\geq")
+            {
+                if (sgn2 == @"\leq")
+                {
+                    if (x3 <= x4) return true;
+                }
+
+                if (sgn2 == @"\lt")
+                {
+                    if (x3 < x4) return true;
+                }
+
+                if (sgn2 == @"\geq")
+                {
+                    return true;
+                }
+
+                if (sgn2 == @"\gt")
+                {
+                    return true;
+                }
+            }
+
+            if (sgn1 == @"\gt")
+            {
+                if (sgn2 == @"\leq")
+                {
+                    if (x3 < x4) return true;
+                }
+
+                if (sgn2 == @"\lt")
+                {
+                    if (x3 < x4) return true;
+                }
+
+                if (sgn2 == @"\geq")
+                {
+                    return true;
+                }
+
+                if (sgn2 == @"\gt")
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Проверяет, имеет ли система показательных неравенств на данном наборе коэффициентов решения
+        /// </summary>
+        /// <returns>true,если удовлетворяет</returns>
+        private bool CheckLog2(string sgn1, string sgn2, double x3, double x4)
+        {
+            if (sgn1 == @"\leq")
+            {
+                if (sgn2 == @"\leq")
+                {
+                    return true;
+                }
+
+                if (sgn2 == @"\lt")
+                {
+                    return true;
+                }
+
+                if (sgn2 == @"\geq")
+                {
+                    if (x4 <= x3) return true;
+                }
+
+                if (sgn2 == @"\gt")
+                {
+                    if (x4 < x3) return true;
+                }
+            }
+
+            if (sgn1 == @"\lt")
+            {
+                if (sgn2 == @"\leq")
+                {
+                    return true;
+                }
+
+                if (sgn2 == @"\lt")
+                {
+                    return true;
+                }
+
+                if (sgn2 == @"\geq")
+                {
+                    if (x4 < x3) return true;
+                }
+
+                if (sgn2 == @"\gt")
+                {
+                    if (x4 < x3) return true;
+                }
+            }
+
+            if (sgn1 == @"\geq")
+            {
+                if (sgn2 == @"\leq")
+                {
+                    if (x3 <= x4) return true;
+                }
+
+                if (sgn2 == @"\lt")
+                {
+                    if (x3 < x4) return true;
+                }
+
+                if (sgn2 == @"\geq")
+                {
+                    return true;
+                }
+
+                if (sgn2 == @"\gt")
+                {
+                    return true;
+                }
+            }
+
+            if (sgn1 == @"\gt")
+            {
+                if (sgn2 == @"\leq")
+                {
+                    if (x3 < x4) return true;
+                }
+
+                if (sgn2 == @"\lt")
+                {
+                    if (x3 < x4) return true;
+                }
+
+                if (sgn2 == @"\geq")
+                {
+                    return true;
+                }
+
+                if (sgn2 == @"\gt")
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Генератор задач третьего уровня сложности
         /// </summary>
         private void GenTask3()
         {
+            if ((type = gen.Next(2)) == 1)
+            {
+                do
+                {
+                    ai = gen.Next(1, 100) * 0.1;
+                    bi = gen.Next(2, 10);
+                    ci = gen.Next(2, 10);
+                    di = gen.Next(1, 100) * 0.1;
+                    ei = gen.Next(2, 10);
+                    fi = gen.Next(2, 10);
+                    sgn1 = eqsigns[gen.Next(4)];
+                    sgn2 = eqsigns[gen.Next(4)];
+                    xx1 = -ci / bi;
+                    x2 = -fi / ei;
+                    x3 = -(ci - 1) / bi;
+                    x4 = -(fi - 1) / ei;
+                } while (ai == 1 || di == 1 || !CheckLog(sgn1, sgn2, Math.Max(xx1, x2), x3, x4, ai, di) || x3 == x4);
+                formula.Formula = $@"log_{{{ai}}}({bi}x+{ci}) {sgn1} 0";
+                formula2.Formula = $@"log_{{{di}}}({ei}x+{fi}) {sgn2} 0";
+            }
+            else
+            {
+                do
+                {
+                    ai = gen.Next(2, 30);
+                    bi = gen.Next(2, 30);
+                    ci = gen.Next(2, 30);
+                    di = gen.Next(2, 30);
+                    sgn1 = eqsigns[gen.Next(4)];
+                    sgn2 = eqsigns[gen.Next(4)];
+                    x3 = Math.Log(bi, ai);
+                    x4 = Math.Log(di, ci);
+                } while (x3 == x4 || !CheckLog2(sgn1, sgn2, x3, x4));
+
+                formula.Formula = $@"{ai}^x {sgn1} {bi}";
+                formula2.Formula = $@"{ci}^x {sgn2} {di}";
+            }
         }
 
         /// <summary>
@@ -260,7 +523,7 @@ namespace CourseWorkWPF
             exit.Visibility = Visibility.Visible;
             rest.Visibility = Visibility.Visible;
         }
-        
+
         private void Bnext_Click(object sender, RoutedEventArgs e)
         {
             if (cbox.Text == "1") GenTask1();
@@ -303,9 +566,9 @@ namespace CourseWorkWPF
                 MessageBox.Show("Выберите количество задач!");
                 return;
             }
-            butgen.Visibility = Visibility.Collapsed;
-            cbox.Visibility = Visibility.Collapsed;
-            cbox2.Visibility = Visibility.Collapsed;
+            butgen.Visibility = Visibility.Hidden;
+            cbox.Visibility = Visibility.Hidden;
+            cbox2.Visibility = Visibility.Hidden;
             bracket.Visibility = Visibility.Visible;
             formula.Visibility = Visibility.Visible;
             formula2.Visibility = Visibility.Visible;
@@ -375,7 +638,7 @@ namespace CourseWorkWPF
             if (cbox.Text == "2")
             {
                 // Для красивого вывода
-                double negbi=-bi, negfi=-fi;
+                double negbi = -bi, negfi = -fi;
                 string xxx1 = $@"\frac{{{negbi}-\sqrt{{{dis1}}}}}{{{2}}}",
                     xx2 = $@"\frac{{{negbi}+\sqrt{{{dis1}}}}}{{{2}}}",
                     xx3 = $@"\frac{{{negfi}-\sqrt{{{dis2}}}}}{{{2}}}",
@@ -390,7 +653,7 @@ namespace CourseWorkWPF
                             var.Formula = "x = " + xx2;
                         }
 
-                        if (x2 < x4 && x2>x3 && xx1 < x3)
+                        if (x2 < x4 && x2 > x3 && xx1 < x3)
                         {
                             var.Formula = $@"x\in [{xx3},{xx2}]";
                         }
@@ -400,7 +663,7 @@ namespace CourseWorkWPF
                             var.Formula = $@"x\in [{xx3},{xx2}]";
                         }
 
-                        if (x2 < x4 && x2>x3 && xx1 > x3)
+                        if (x2 < x4 && x2 > x3 && xx1 > x3)
                         {
                             var.Formula = $@"x\in [{xxx1},{xx2}]";
                         }
@@ -420,7 +683,7 @@ namespace CourseWorkWPF
                             var.Formula = $@"x\in [{xxx1},{xx2}]";
                         }
 
-                        if (x2>x4 && xx1<x3)
+                        if (x2 > x4 && xx1 < x3)
                         {
                             var.Formula = $@"x\in [{xx3},{xx4}]";
                         }
@@ -430,7 +693,7 @@ namespace CourseWorkWPF
                             var.Formula = $@"x\in [{xx3},{xx4}]";
                         }
 
-                        if (x2 > x4 && xx1 < x4 && xx1>x3)
+                        if (x2 > x4 && xx1 < x4 && xx1 > x3)
                         {
                             var.Formula = $@"x\in [{xxx1},{xx4}]";
                         }
@@ -501,7 +764,7 @@ namespace CourseWorkWPF
                             var.Formula = $@"x\in [{xxx1},{xx2}]";
                         }
 
-                        if (x2 < x4 && x2>x3 && xx1 < x3)
+                        if (x2 < x4 && x2 > x3 && xx1 < x3)
                         {
                             var.Formula = $@"x\in [{xxx1},{xx3}]";
                         }
@@ -1069,7 +1332,7 @@ namespace CourseWorkWPF
                         {
                             var.Formula = $@"x\in [{xx3},{xxx1})";
                         }
-                        
+
                         if (x4 > x2 && x3 < xx1)
                         {
                             var.Formula = $@"x\in [{xx3},{xxx1})\cup({xx2},{xx4}]";
@@ -1278,6 +1541,246 @@ namespace CourseWorkWPF
                         {
                             var.Formula = $@"x\in (-\infty,{xx3})\cup({xx4},{xxx1})\cup({xx2},\infty)";
                         }
+                    }
+                }
+            }
+
+            if (cbox.Text == "3" && type == 1)
+            {
+                string xx2, xx3, xx4;
+                if (-ci / bi > -fi / ei) xx2 = $@"\frac{{{-ci}}}{{{bi}}}";
+                else xx2 = $@"\frac{{{-fi}}}{{{ci}}}";
+                xx3 = $@"\frac{{{-(ci - 1)}}}{{{bi}}}";
+                xx4 = $@"\frac{{{-(fi - 1)}}}{{{ei}}}";
+                if (ai < 1)
+                {
+                    if (sgn1 == eqsigns[0]) sgn1 = eqsigns[1];
+                    if (sgn1 == eqsigns[1]) sgn1 = eqsigns[0];
+                    if (sgn1 == eqsigns[2]) sgn1 = eqsigns[3];
+                    if (sgn1 == eqsigns[3]) sgn1 = eqsigns[2];
+                }
+
+                if (di < 1)
+                {
+                    if (sgn2 == eqsigns[0]) sgn2 = eqsigns[1];
+                    if (sgn2 == eqsigns[1]) sgn2 = eqsigns[0];
+                    if (sgn2 == eqsigns[2]) sgn2 = eqsigns[3];
+                    if (sgn2 == eqsigns[3]) sgn2 = eqsigns[2];
+                }
+                if (sgn1 == @"\leq")
+                {
+                    if (sgn2 == @"\leq")
+                    {
+                        if (x3 < x4) var.Formula = $@"x\in ({xx2},{xx3}]";
+                        else var.Formula = $@"x\in ({xx2},{xx4}]";
+                    }
+
+                    if (sgn2 == @"\lt")
+                    {
+                        if (x3 < x4) var.Formula = $@"x\in ({xx2},{xx3}]";
+                        else var.Formula = $@"x\in ({xx2},{xx4})";
+                    }
+
+                    if (sgn2 == @"\geq")
+                    {
+                        var.Formula = $@"x\in [{xx4},{xx3}]";
+                    }
+
+                    if (sgn2 == @"\gt")
+                    {
+                        var.Formula = $@"x\in ({xx4},{xx3}]";
+                    }
+                }
+
+                if (sgn1 == @"\lt")
+                {
+                    if (sgn2 == @"\leq")
+                    {
+                        if (x3 < x4) var.Formula = $@"x\in ({xx2},{xx3})";
+                        else var.Formula = $@"x\in ({xx2},{xx4}]";
+                    }
+
+                    if (sgn2 == @"\lt")
+                    {
+                        if (x3 < x4) var.Formula = $@"x\in ({xx2},{xx3})";
+                        else var.Formula = $@"x\in ({xx2},{xx4})";
+                    }
+
+                    if (sgn2 == @"\geq")
+                    {
+                        var.Formula = $@"x\in [{xx4},{xx3})";
+                    }
+
+                    if (sgn2 == @"\gt")
+                    {
+                        var.Formula = $@"x\in ({xx4},{xx3})";
+                    }
+                }
+
+                if (sgn1 == @"\geq")
+                {
+                    if (sgn2 == @"\leq")
+                    {
+                        var.Formula = $@"x\in [{xx3},{xx4}]";
+                    }
+
+                    if (sgn2 == @"\lt")
+                    {
+                        var.Formula = $@"x\in [{xx3},{xx4})";
+                    }
+
+                    if (sgn2 == @"\geq")
+                    {
+                        if (x3 > x4) var.Formula = $@"x\in [{xx3},\infty)";
+                        else var.Formula = $@"x\in [{xx4},\infty)";
+                    }
+
+                    if (sgn2 == @"\gt")
+                    {
+                        if (x3 > x4) var.Formula = $@"x\in [{xx3},\infty)";
+                        else var.Formula = $@"x\in ({xx4},\infty)";
+                    }
+                }
+
+                if (sgn1 == @"\gt")
+                {
+                    if (sgn2 == @"\leq")
+                    {
+                        var.Formula = $@"x\in ({xx3},{xx4}]";
+                    }
+
+                    if (sgn2 == @"\lt")
+                    {
+                        var.Formula = $@"x\in ({xx3},{xx4})";
+                    }
+
+                    if (sgn2 == @"\geq")
+                    {
+                        if (x3 > x4) var.Formula = $@"x\in ({xx3},\infty)";
+                        else var.Formula = $@"x\in [{xx4},\infty)";
+                    }
+
+                    if (sgn2 == @"\gt")
+                    {
+                        if (x3 > x4) var.Formula = $@"x\in ({xx3},\infty)";
+                        else var.Formula = $@"x\in ({xx4},\infty)";
+                    }
+                }
+            }
+
+            if (cbox.Text == "3" && type == 0)
+            {
+                string xx3, xx4;
+                if (bi == 1) xx3 = "0";
+                else
+                {
+                    if (bi == ai) xx3 = "1";
+                    else xx3 = $@"log_{{{ai}}}{bi}";
+                }
+                if (di == 1) xx4 = "0";
+                else
+                {
+                    if (di == ci) xx4 = "1";
+                    else xx4 = $@"log_{{{ci}}}{di}";
+                }
+
+                if (sgn1 == @"\leq")
+                {
+                    if (sgn2 == @"\leq")
+                    {
+                        if (x3 < x4) var.Formula = $@"x\in (-\infty,{xx3}]";
+                        else var.Formula = $@"x\in (-\infty,{xx4}]";
+                    }
+
+                    if (sgn2 == @"\lt")
+                    {
+                        if (x3 < x4) var.Formula = $@"x\in (-\infty,{xx3}]";
+                        else var.Formula = $@"x\in (-\infty,{xx4})";
+                    }
+
+                    if (sgn2 == @"\geq")
+                    {
+                        var.Formula = $@"x\in [{xx4},{xx3}]";
+                    }
+
+                    if (sgn2 == @"\gt")
+                    {
+                        var.Formula = $@"x\in ({xx4},{xx3}]";
+                    }
+                }
+
+                if (sgn1 == @"\lt")
+                {
+                    if (sgn2 == @"\leq")
+                    {
+                        if (x3 < x4) var.Formula = $@"x\in (-\infty,{xx3})";
+                        else var.Formula = $@"x\in (-\infty,{xx4}]";
+                    }
+
+                    if (sgn2 == @"\lt")
+                    {
+                        if (x3 < x4) var.Formula = $@"x\in (-\infty,{xx3})";
+                        else var.Formula = $@"x\in (-\infty,{xx4})";
+                    }
+
+                    if (sgn2 == @"\geq")
+                    {
+                        var.Formula = $@"x\in [{xx4},{xx3})";
+                    }
+
+                    if (sgn2 == @"\gt")
+                    {
+                        var.Formula = $@"x\in ({xx4},{xx3})";
+                    }
+                }
+
+                if (sgn1 == @"\geq")
+                {
+                    if (sgn2 == @"\leq")
+                    {
+                        var.Formula = $@"x\in [{xx3},{xx4}]";
+                    }
+
+                    if (sgn2 == @"\lt")
+                    {
+                        var.Formula = $@"x\in [{xx3},{xx4})";
+                    }
+
+                    if (sgn2 == @"\geq")
+                    {
+                        if (x3 > x4) var.Formula = $@"x\in [{xx3},\infty)";
+                        else var.Formula = $@"x\in [{xx4},\infty)";
+                    }
+
+                    if (sgn2 == @"\gt")
+                    {
+                        if (x3 > x4) var.Formula = $@"x\in [{xx3},\infty)";
+                        else var.Formula = $@"x\in ({xx4},\infty)";
+                    }
+                }
+
+                if (sgn1 == @"\gt")
+                {
+                    if (sgn2 == @"\leq")
+                    {
+                        var.Formula = $@"x\in ({xx3},{xx4}]";
+                    }
+
+                    if (sgn2 == @"\lt")
+                    {
+                        var.Formula = $@"x\in ({xx3},{xx4})";
+                    }
+
+                    if (sgn2 == @"\geq")
+                    {
+                        if (x3 > x4) var.Formula = $@"x\in ({xx3},\infty)";
+                        else var.Formula = $@"x\in [{xx4},\infty)";
+                    }
+
+                    if (sgn2 == @"\gt")
+                    {
+                        if (x3 > x4) var.Formula = $@"x\in ({xx3},\infty)";
+                        else var.Formula = $@"x\in ({xx4},\infty)";
                     }
                 }
             }
