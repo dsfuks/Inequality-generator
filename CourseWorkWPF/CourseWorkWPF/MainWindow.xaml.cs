@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using Math = System.Math;
 
 namespace CourseWorkWPF
@@ -9,7 +11,11 @@ namespace CourseWorkWPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Переменная для обычной генерации, не по ключу генерации
         private static Random gen = new Random();
+
+        // Список для генерации по ключу генерации
+        private List<Random> genList = new List<Random>();
 
         // Счетчик задач
         private static int taskCount;
@@ -35,6 +41,96 @@ namespace CourseWorkWPF
         // Тип задачи третьего уровня
         private int type;
 
+        // Сид для генерации по ключу генерации
+        private int seed;
+
+        // Счетчик списка рандомов, увеличивается каждый раз при генерации по ключу генерации
+        private int rCount = -1;
+
+        private void Keygen_Click(object sender, RoutedEventArgs e)
+        {
+            string message = "Ключ генерации должен состоять из 4 цифр";
+
+            // KeyBox - поле ввода для ключа генерации
+            if (KeyBox.Text == "Введите ключ генерации...") MessageBox.Show("Вы не ввели ключ генерации!");
+            if (KeyBox.Text.Length != 4)
+            {
+                MessageBox.Show(message);
+                return;
+            }
+            foreach (var p in KeyBox.Text)
+            {
+                if (p < '0' || p > '9')
+                {
+                    MessageBox.Show(message);
+                    break;
+                }
+            }
+
+            butgen.Visibility = Visibility.Hidden;
+            cbox.Visibility = Visibility.Hidden;
+            cbox2.Visibility = Visibility.Hidden;
+            bracket.Visibility = Visibility.Visible;
+            formula.Visibility = Visibility.Visible;
+            formula2.Visibility = Visibility.Visible;
+            bnext.Visibility = Visibility.Visible;
+            ansbut.Visibility = Visibility.Visible;
+            keygen.Visibility = Visibility.Hidden;
+            KeyBox.Visibility = Visibility.Hidden;
+
+            rCount++;
+            int.TryParse(KeyBox.Text, out seed);
+            genList.Add(new Random(seed));
+            cbox.Text = "";
+
+            // Генерируем сложность и количество задач с заданным сидом
+            cbox.Text += genList[rCount].Next(1, 4).ToString();
+            taskCount = genList[rCount].Next(1, 11);
+            if (cbox.Text == "1")
+            {
+                GenTask1();
+            }
+
+            if (cbox.Text == "2")
+            {
+                GenTask2();
+            }
+
+            if (cbox.Text == "3")
+            {
+                GenTask3();
+            }
+        }
+
+        // Обработка потери фокуса с поля ввода ключа генерации
+        private void KeyBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (KeyBox.Text == "") KeyBox.Text = "Введите ключ генерации...";
+        }
+
+        private void KeyBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (KeyBox.Text == "Введите ключ генерации...") KeyBox.Text = "";
+        }
+
+        private void KeyBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (KeyBox.Text.Length > 30)
+            {
+                KeyBox.Text = "";
+                MessageBox.Show("Ключ генерации должен состоять из 4 цифр");
+            }
+        }
+
+        private void Info_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(
+                "Приложение для генерации задач на тему 'системы неравенств'.\n Для начала работы выберите сложность и количество задач " +
+                "либо введите ключ генерации и нажмите кнопку 'сгенерировать задачи' или 'сгенерировать задачи с помощью ключа генерации' соответственно" +
+                ". Ключ генерации должен состоять из 4 цифр. Чтобы посмотреть ответ на задачу, нажмите на кнопку 'показать ответ'. После решения всех задач, нажмите 'начать заново'" +
+                " для возврата в главное меню либо 'выйти' для выхода из программы.", "Справка");
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -50,6 +146,7 @@ namespace CourseWorkWPF
             exit.Visibility = Visibility.Hidden;
             ansbut.Visibility = Visibility.Hidden;
             var.Visibility = Visibility.Hidden;
+            KeyBox.Text = "Введите ключ генерации...";
         }
 
         /// <summary>
@@ -90,14 +187,28 @@ namespace CourseWorkWPF
         /// </summary>
         private void GenTask1()
         {
-            a = gen.Next(1, 30).ToString();
-            b = gen.Next(1, 30).ToString();
-            c = gen.Next(1, 30).ToString();
-            d = gen.Next(1, 30).ToString();
-            e = gen.Next(1, 30).ToString();
-            f = gen.Next(1, 30).ToString();
+            // Если был введен корректный ключ генерации и нажата соответствующая кнопка для генерации по ключу, то идем по ветке false
+            if (KeyBox.Text == "Введите ключ генерации...")
+            {
+                a = gen.Next(1, 30).ToString();
+                b = gen.Next(1, 30).ToString();
+                c = gen.Next(1, 30).ToString();
+                d = gen.Next(1, 30).ToString();
+                e = gen.Next(1, 30).ToString();
+                f = gen.Next(1, 30).ToString();
+                sgn1 = eqsigns[gen.Next(4)];
+            }
+            else
+            {
+                a = genList[rCount].Next(1, 30).ToString();
+                b = genList[rCount].Next(1, 30).ToString();
+                c = genList[rCount].Next(1, 30).ToString();
+                d = genList[rCount].Next(1, 30).ToString();
+                e = genList[rCount].Next(1, 30).ToString();
+                f = genList[rCount].Next(1, 30).ToString();
+                sgn1 = eqsigns[genList[rCount].Next(4)];
+            }
             BeatOut1(ref a, ref d);
-            sgn1 = eqsigns[gen.Next(4)];
             formula.Formula = $"{a}x+{b} {sgn1} {c}";
             formula2.Formula = $"{d}x+{e} {sgn1} {f}";
         }
@@ -211,19 +322,43 @@ namespace CourseWorkWPF
         /// </summary>
         private void GenTask2()
         {
-            sgn1 = eqsigns[gen.Next(3)];
-            sgn2 = eqsigns[gen.Next(3)];
+            if (KeyBox.Text == "Введите ключ генерации...")
+            {
+                sgn1 = eqsigns[gen.Next(4)];
+                sgn2 = eqsigns[gen.Next(4)];
+            }
+            else
+            {
+                sgn1 = eqsigns[genList[rCount].Next(4)];
+                sgn2 = eqsigns[genList[rCount].Next(4)];
+            }
+
             // Генерируем коэффициенты квадратного уравнения, пока дискрминант не будет больше нуля
             do
             {
-                ai = 1;
-                bi = gen.Next(-10, 10);
-                ci = gen.Next(-10, 10);
-                di = gen.Next(-10, 10);
-                ei = 1;
-                fi = gen.Next(-10, 10);
-                gi = gen.Next(-10, 10);
-                hi = gen.Next(-10, 10);
+                if (KeyBox.Text == "Введите ключ генерации...")
+                {
+                    ai = 1;
+                    bi = gen.Next(-10, 10);
+                    ci = gen.Next(-10, 10);
+                    di = gen.Next(-10, 10);
+                    ei = 1;
+                    fi = gen.Next(-10, 10);
+                    gi = gen.Next(-10, 10);
+                    hi = gen.Next(-10, 10);
+                }
+                else
+                {
+                    ai = 1;
+                    bi = genList[rCount].Next(-10, 10);
+                    ci = genList[rCount].Next(-10, 10);
+                    di = genList[rCount].Next(-10, 10);
+                    ei = 1;
+                    fi = genList[rCount].Next(-10, 10); ;
+                    gi = genList[rCount].Next(-10, 10);
+                    hi = genList[rCount].Next(-10, 10);
+                }
+
                 dis1 = bi * bi - 4 * ai * (ci - di);
                 dis2 = fi * fi - 4 * (gi - hi) * ei;
                 xx1 = (-bi - Math.Pow(dis1, 0.5)) / 2;
@@ -471,42 +606,91 @@ namespace CourseWorkWPF
         /// </summary>
         private void GenTask3()
         {
-            if ((type = gen.Next(2)) == 1)
+            // Если был введен корректный ключ генерации и нажата соответствующая кнопка для генерации по ключу, то идем по ветке false
+            if (KeyBox.Text == "Введите ключ генерации...")
             {
-                do
+                // Определяем тип неравенств - с показательными функциями или с логарифмом
+                if ((type = gen.Next(2)) == 1)
                 {
-                    ai = gen.Next(1, 100) * 0.1;
-                    bi = gen.Next(2, 10);
-                    ci = gen.Next(2, 10);
-                    di = gen.Next(1, 100) * 0.1;
-                    ei = gen.Next(2, 10);
-                    fi = gen.Next(2, 10);
-                    sgn1 = eqsigns[gen.Next(4)];
-                    sgn2 = eqsigns[gen.Next(4)];
-                    xx1 = -ci / bi;
-                    x2 = -fi / ei;
-                    x3 = -(ci - 1) / bi;
-                    x4 = -(fi - 1) / ei;
-                } while (ai == 1 || di == 1 || !CheckLog(sgn1, sgn2, Math.Max(xx1, x2), x3, x4, ai, di) || x3 == x4);
-                formula.Formula = $@"log_{{{ai}}}({bi}x+{ci}) {sgn1} 0";
-                formula2.Formula = $@"log_{{{di}}}({ei}x+{fi}) {sgn2} 0";
+                    do
+                    {
+                        ai = gen.Next(1, 100) * 0.1;
+                        bi = gen.Next(2, 10);
+                        ci = gen.Next(2, 10);
+                        di = gen.Next(1, 100) * 0.1;
+                        ei = gen.Next(2, 10);
+                        fi = gen.Next(2, 10);
+                        sgn1 = eqsigns[gen.Next(4)];
+                        sgn2 = eqsigns[gen.Next(4)];
+                        xx1 = -ci / bi;
+                        x2 = -fi / ei;
+                        x3 = -(ci - 1) / bi;
+                        x4 = -(fi - 1) / ei;
+                    } while (ai == 1 || di == 1 || !CheckLog(sgn1, sgn2, Math.Max(xx1, x2), x3, x4, ai, di) ||
+                             x3 == x4);
+
+                    formula.Formula = $@"log_{{{ai}}}({bi}x+{ci}) {sgn1} 0";
+                    formula2.Formula = $@"log_{{{di}}}({ei}x+{fi}) {sgn2} 0";
+                }
+                else
+                {
+                    do
+                    {
+                        ai = gen.Next(2, 30);
+                        bi = gen.Next(2, 30);
+                        ci = gen.Next(2, 30);
+                        di = gen.Next(2, 30);
+                        sgn1 = eqsigns[gen.Next(4)];
+                        sgn2 = eqsigns[gen.Next(4)];
+                        x3 = Math.Log(bi, ai);
+                        x4 = Math.Log(di, ci);
+                    } while (x3 == x4 || !CheckLog2(sgn1, sgn2, x3, x4));
+
+                    formula.Formula = $@"{ai}^x {sgn1} {bi}";
+                    formula2.Formula = $@"{ci}^x {sgn2} {di}";
+                }
             }
             else
             {
-                do
+                if ((type = genList[rCount].Next(2)) == 1)
                 {
-                    ai = gen.Next(2, 30);
-                    bi = gen.Next(2, 30);
-                    ci = gen.Next(2, 30);
-                    di = gen.Next(2, 30);
-                    sgn1 = eqsigns[gen.Next(4)];
-                    sgn2 = eqsigns[gen.Next(4)];
-                    x3 = Math.Log(bi, ai);
-                    x4 = Math.Log(di, ci);
-                } while (x3 == x4 || !CheckLog2(sgn1, sgn2, x3, x4));
+                    do
+                    {
+                        ai = genList[rCount].Next(1, 100) * 0.1;
+                        bi = genList[rCount].Next(2, 10);
+                        ci = genList[rCount].Next(2, 10);
+                        di = genList[rCount].Next(1, 100) * 0.1;
+                        ei = genList[rCount].Next(2, 10);
+                        fi = genList[rCount].Next(2, 10);
+                        sgn1 = eqsigns[genList[rCount].Next(4)];
+                        sgn2 = eqsigns[genList[rCount].Next(4)];
+                        xx1 = -ci / bi;
+                        x2 = -fi / ei;
+                        x3 = -(ci - 1) / bi;
+                        x4 = -(fi - 1) / ei;
+                    } while (ai == 1 || di == 1 || !CheckLog(sgn1, sgn2, Math.Max(xx1, x2), x3, x4, ai, di) ||
+                             x3 == x4);
 
-                formula.Formula = $@"{ai}^x {sgn1} {bi}";
-                formula2.Formula = $@"{ci}^x {sgn2} {di}";
+                    formula.Formula = $@"log_{{{ai}}}({bi}x+{ci}) {sgn1} 0";
+                    formula2.Formula = $@"log_{{{di}}}({ei}x+{fi}) {sgn2} 0";
+                }
+                else
+                {
+                    do
+                    {
+                        ai = genList[rCount].Next(2, 30);
+                        bi = genList[rCount].Next(2, 30);
+                        ci = genList[rCount].Next(2, 30);
+                        di = genList[rCount].Next(2, 30);
+                        sgn1 = eqsigns[genList[rCount].Next(4)];
+                        sgn2 = eqsigns[genList[rCount].Next(4)];
+                        x3 = Math.Log(bi, ai);
+                        x4 = Math.Log(di, ci);
+                    } while (x3 == x4 || !CheckLog2(sgn1, sgn2, x3, x4));
+
+                    formula.Formula = $@"{ai}^x {sgn1} {bi}";
+                    formula2.Formula = $@"{ci}^x {sgn2} {di}";
+                }
             }
         }
 
@@ -524,6 +708,7 @@ namespace CourseWorkWPF
             rest.Visibility = Visibility.Visible;
         }
 
+        // Обработчик клика кнопки ">>"
         private void Bnext_Click(object sender, RoutedEventArgs e)
         {
             if (cbox.Text == "1") GenTask1();
@@ -537,11 +722,13 @@ namespace CourseWorkWPF
             }
         }
 
+        // Обаботчик кнопки "Выйти"
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);
         }
 
+        // Обработчик кнопки "Начать заново"
         private void Rest_Click(object sender, RoutedEventArgs e)
         {
             rest.Visibility = Visibility.Hidden;
@@ -549,10 +736,13 @@ namespace CourseWorkWPF
             butgen.Visibility = Visibility.Visible;
             cbox.Visibility = Visibility.Visible;
             cbox2.Visibility = Visibility.Visible;
+            keygen.Visibility = Visibility.Visible;
+            KeyBox.Visibility = Visibility.Visible;
             cbox.SelectedIndex = 0;
             cbox2.SelectedIndex = 0;
         }
 
+        // Обработчик кнопки "Сгенерировать задачи"
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             if (cbox.Text == "выберите сложность задач")
@@ -569,11 +759,14 @@ namespace CourseWorkWPF
             butgen.Visibility = Visibility.Hidden;
             cbox.Visibility = Visibility.Hidden;
             cbox2.Visibility = Visibility.Hidden;
+            keygen.Visibility = Visibility.Hidden;
+            KeyBox.Visibility = Visibility.Hidden;
             bracket.Visibility = Visibility.Visible;
             formula.Visibility = Visibility.Visible;
             formula2.Visibility = Visibility.Visible;
             bnext.Visibility = Visibility.Visible;
             ansbut.Visibility = Visibility.Visible;
+            KeyBox.Text = "Введите ключ генерации...";
             int.TryParse(cbox2.Text, out taskCount);
             if (cbox.Text == "1")
             {
@@ -591,6 +784,7 @@ namespace CourseWorkWPF
             }
         }
 
+        // Обработчик кнопки "Показать ответ"
         private void Button_Click_2(object sender, RoutedEventArgs m)
         {
             var.Visibility = Visibility.Visible;
@@ -602,6 +796,8 @@ namespace CourseWorkWPF
                 double.TryParse(d, out di);
                 double.TryParse(e, out ei);
                 double.TryParse(f, out fi);
+
+                // Корни
                 double first = (ci - bi) / ai, second = (fi - ei) / di;
                 if (sgn1 == @"\leq" || sgn1 == @"\lt")
                 {
@@ -1786,6 +1982,7 @@ namespace CourseWorkWPF
             }
         }
 
+        // Обработчики разворачивания и сворачивания combobox с выбором количества и сложности задач
         private void Cbox_DropDownOpened(object sender, EventArgs e)
         {
             cbox.Items.RemoveAt(0);
