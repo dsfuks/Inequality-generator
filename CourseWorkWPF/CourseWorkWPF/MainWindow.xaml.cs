@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using Math = System.Math;
+//using Math = System.Math;
 
 namespace CourseWorkWPF
 {
@@ -63,7 +63,7 @@ namespace CourseWorkWPF
                 if (p < '0' || p > '9')
                 {
                     MessageBox.Show(message);
-                    break;
+                    return;
                 }
             }
 
