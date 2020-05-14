@@ -38,13 +38,16 @@
             <TextBlock>9</TextBlock>
             <TextBlock>10</TextBlock>
         </ComboBox>
-        <Button x:Name="bnext" Content="&gt;&gt;" HorizontalAlignment="Left" Margin="193,146,0,0" VerticalAlignment="Top" Width="31" Height="21" Click="Bnext_Click" Background="Orange" Grid.Column="1" RenderTransformOrigin="2.677,0.452"/>
-        <Button x:Name="rest" Content="Начать заново" HorizontalAlignment="Left" VerticalAlignment="Top" Width="102" Margin="193,181,0,0" Height="38" Background="Orange" Click="Rest_Click" Grid.Column="1"/>
+        <Button x:Name="bnext" Content="&gt;&gt;" HorizontalAlignment="Left" Margin="225,146,0,0" VerticalAlignment="Top" Width="30" Height="20" Click="Bnext_Click" Background="Orange" Grid.Column="1" RenderTransformOrigin="2.677,0.452"/>
+        <Button x:Name="rest" Content="Главное меню" HorizontalAlignment="Left" VerticalAlignment="Top" Width="102" Margin="193,181,0,0" Height="38" Background="Orange" Click="Rest_Click" Grid.Column="1"/>
         <Button x:Name="exit" Content="Выйти" HorizontalAlignment="Left" VerticalAlignment="Top" Width="102" Margin="323,181,0,0" Height="38" Background="Orange" Click="Button_Click" Grid.Column="1"/>
-        <Button x:Name="ansbut" Content="Показать ответ" HorizontalAlignment="Left" VerticalAlignment="Top" Width="185" Margin="3,146,0,0" Background="Orange" Click="Button_Click_2" Height="20" Grid.Column="1"/>
+        <Button x:Name="ansbut" Content="Показать ответ" HorizontalAlignment="Left" VerticalAlignment="Top" Width="185" Margin="35,146,0,0" Background="Orange" Click="Button_Click_2" Height="20" Grid.Column="1"/>
         <Button x:Name="keygen" Content="Сгенерировать задачи с помощью ключа генерации" HorizontalAlignment="Left" Margin="0,366,0,0" VerticalAlignment="Top" Width="394" Height="28" Background="Orange" Click="Keygen_Click" Grid.Column="1"/>
         <TextBox x:Name="KeyBox" HorizontalAlignment="Left" Height="23" Margin="0,343,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="205" Background="#FFD7FFFD" LostFocus="KeyBox_LostFocus" GotFocus="KeyBox_GotFocus" TextChanged="KeyBox_TextChanged" Grid.Column="1"/>
         <Button x:Name="info" Content="Справка" Grid.Column="1" HorizontalAlignment="Left" Margin="539,35,0,0" VerticalAlignment="Top" Width="74" Background="#FF6BC5C1" Click="Info_Click" Height="20"/>
+        <Button x:Name="bback" Content="&lt;&lt;" Grid.Column="1" Margin="5,146,0,0" VerticalAlignment="Top" Background="Orange" Click="Bback_Click" HorizontalAlignment="Left" Width="25"/>
+        <Button x:Name="bendtask" Content="Закончить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="134" Grid.Column="1" Margin="260,146,0,0" Background="Orange" Click="Bendtask_Click"/>
+        <Button x:Name="bmmenu" Content="Главное меню" HorizontalAlignment="Left" VerticalAlignment="Top" Width="108" Grid.Column="1" Margin="618,35,0,0" Background="#FFF06565" Click="Bmmenu_Click"/>
 
     </Grid>
 
