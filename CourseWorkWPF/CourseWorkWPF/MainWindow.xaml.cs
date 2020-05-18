@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using WpfMath;
 
 //using Math = System.Math;
 
@@ -17,6 +19,9 @@ namespace CourseWorkWPF
 
         private List<List<string>> strl = new List<List<string>>();
 
+        // Список для хранения всех формул ответов и неравенств
+        private List<List<string>> formulas = new List<List<string>>();
+
         // Переменная для определения номера задачи
 
         private int t = 0;
@@ -28,7 +33,7 @@ namespace CourseWorkWPF
         private List<Random> genList = new List<Random>();
 
         // Счетчик задач
-        private static int taskCount;
+        private static int taskCount, staskcount;
 
         // Коэффициенты неравенств
         private static string a, b, c, d, e, f, g, h;
@@ -64,6 +69,7 @@ namespace CourseWorkWPF
             // Обнуляем списки для хранения задач при новой генерации
             cfl = new List<List<double>>();
             strl = new List<List<string>>();
+            formulas = new List<List<string>>();
             t = 0;
 
             // KeyBox - поле ввода для ключа генерации
@@ -101,7 +107,8 @@ namespace CourseWorkWPF
 
             // Генерируем сложность и количество задач с заданным сидом
             cbox.Text += genList[rCount].Next(1, 4).ToString();
-            taskCount = genList[rCount].Next(1, 11);
+            taskCount = genList[rCount].Next(4, 11);
+            staskcount = taskCount;
             if (cbox.Text == "1")
             {
                 GenTask1();
@@ -144,12 +151,14 @@ namespace CourseWorkWPF
                 "Приложение для генерации задач на тему 'системы неравенств'.\n Для начала работы выберите сложность и количество задач " +
                 "либо введите ключ генерации и нажмите кнопку 'сгенерировать задачи' или 'сгенерировать задачи с помощью ключа генерации' соответственно" +
                 ". Ключ генерации должен состоять из 4 цифр. Чтобы посмотреть ответ на задачу, нажмите на кнопку 'показать ответ'. После решения всех задач, нажмите 'начать заново'" +
-                " для возврата в главное меню либо 'выйти' для выхода из программы.", "Справка");
+                " для возврата в главное меню либо 'выйти' для выхода из программы. Для сохранения задач в html-файл, дойдите до последней сгенерированной задачи" +
+                @"и нажмите ""Сохранить задачи в файл"".", "Справка");
         }
 
         private void Bback_Click(object sender, RoutedEventArgs p)
         {
             t--;
+            if (bsave.Visibility != Visibility.Visible)  formulas.RemoveAt(formulas.Count - 1);
             taskCount++;
             bnext.Visibility = Visibility.Visible;
             var.Visibility = Visibility.Hidden;
@@ -233,6 +242,7 @@ namespace CourseWorkWPF
             bback.Visibility = Visibility.Hidden;
             bendtask.Visibility = Visibility.Hidden;
             bmmenu.Visibility = Visibility.Hidden;
+            bsave.Visibility = Visibility.Hidden;
             KeyBox.Text = "Введите ключ генерации...";
         }
 
@@ -257,6 +267,45 @@ namespace CourseWorkWPF
             KeyBox.Visibility = Visibility.Visible;
             cbox.SelectedIndex = 0;
             cbox2.SelectedIndex = 0;
+        }
+
+        private void Bsave_Click(object sender, RoutedEventArgs e)
+        {
+            Directory.CreateDirectory("Сгенерированные задачи");
+            int fcount = 1;
+            string path = "Сгенерированные задачи/" + fcount + " набор задач.html";
+            while (File.Exists(path))
+            {
+                fcount++;
+                path = "Сгенерированные задачи/" + fcount + " набор задач.html";
+            }
+            FileStream myStream = File.Create(path);
+           // FileStream myStream = File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            StreamWriter writer = new StreamWriter(myStream);
+            writer.WriteLine("<html xmlns:controls=\"clr -namespace:WpfMath.Controls;assembly=WpfMath\">");
+            writer.WriteLine("<head>");
+            writer.WriteLine("  <title>"+fcount + " набор задач</title>");
+            writer.WriteLine("</head>");
+            writer.WriteLine("<body>");
+            for (int j = 0; j < staskcount; j++)
+            {
+                if (formulas[j][0].Contains(@"\lt")) formulas[j][0] = formulas[j][0].Replace(@"\lt", "<");
+                if (formulas[j][1].Contains(@"\lt")) formulas[j][1] = formulas[j][1].Replace(@"\lt", "<");
+                if (formulas[j][0].Contains(@"\gt")) formulas[j][0] = formulas[j][0].Replace(@"\gt", ">");
+                if (formulas[j][1].Contains(@"\gt")) formulas[j][1] = formulas[j][1].Replace(@"\gt", ">");
+                writer.WriteLine(@"<h3>"+ (j+1) + " задача</h3>");
+                writer.WriteLine(@"<p><img src=""http://latex.codecogs.com/gif.latex?\begin{cases}"
+                                 + formulas[j][0] + @"\\" + formulas[j][1] + @"\end{cases}"" ></p> ");
+                writer.WriteLine($@"<input type=""button"" id=""hider{j}"" value=""Ответ"" /><script>" +
+                    $@"document.getElementById('hider{j}').onclick = function() {{
+                    document.getElementById(""text{j}"").style.display = ""block"" 
+                    document.getElementById('text{j}').visible = true;}}</script> 
+                    <img id = ""text{j}"" style = ""display:none"" src= ""http://latex.codecogs.com/gif.latex?" + formulas[j][2] + @""">");
+            }
+            
+            writer.WriteLine("</body>");
+            writer.WriteLine("</html>");
+            writer.Close();
         }
 
         /// <summary>
@@ -327,6 +376,14 @@ namespace CourseWorkWPF
             strl[strl.Count - 1].Add(sgn1);
             formula.Formula = $"{a}x+{b} {sgn1} {c}";
             formula2.Formula = $"{d}x+{e} {sgn1} {f}";
+            formulas.Add(new List<string>());
+            formulas[formulas.Count - 1].Add(formula.Formula);
+            formulas[formulas.Count - 1].Add(formula2.Formula);
+
+            // Запускаем обработчик кнопки ">>"
+            Solve();
+            var.Visibility = Visibility.Hidden;
+            formulas[formulas.Count - 1].Add(var.Formula);
         }
 
         /// <summary>
@@ -461,6 +518,7 @@ namespace CourseWorkWPF
             x3 = cfl[t][12];
             x4 = cfl[t][13];
         }
+
         /// <summary>
         /// Заносит задачу второго уровня сложности в список
         /// </summary>
@@ -527,7 +585,7 @@ namespace CourseWorkWPF
                     ci = genList[rCount].Next(-10, 10);
                     di = genList[rCount].Next(-10, 10);
                     ei = 1;
-                    fi = genList[rCount].Next(-10, 10); ;
+                    fi = genList[rCount].Next(-10, 10);
                     gi = genList[rCount].Next(-10, 10);
                     hi = genList[rCount].Next(-10, 10);
                 }
@@ -552,6 +610,14 @@ namespace CourseWorkWPF
             SaveTask2();
             formula.Formula = $"{a}x^2{b}x{c} {sgn1} {di}";
             formula2.Formula = $"{e}x^2{f}x{g} {sgn2} {hi}";
+            formulas.Add(new List<string>());
+            formulas[formulas.Count - 1].Add(formula.Formula);
+            formulas[formulas.Count - 1].Add(formula2.Formula);
+
+            // Запускаем обработчик кнопки ">>"
+            Solve();
+            var.Visibility = Visibility.Hidden;
+            formulas[formulas.Count - 1].Add(var.Formula);
         }
 
         /// <summary>
@@ -776,7 +842,7 @@ namespace CourseWorkWPF
             }
             return false;
         }
-        
+
         /// <summary>
         /// Генератор задач третьего уровня сложности
         /// </summary>
@@ -821,7 +887,14 @@ namespace CourseWorkWPF
                     strl[t].Add(sgn2);
                     formula.Formula = $@"log_{{{ai}}}({bi}x+{ci}) {sgn1} 0";
                     formula2.Formula = $@"log_{{{di}}}({ei}x+{fi}) {sgn2} 0";
+                    formulas.Add(new List<string>());
+                    formulas[formulas.Count - 1].Add(formula.Formula);
+                    formulas[formulas.Count - 1].Add(formula2.Formula);
 
+                    // Запускаем обработчик кнопки ">>"
+                    Solve();
+                    var.Visibility = Visibility.Hidden;
+                    formulas[formulas.Count - 1].Add(var.Formula);
                 }
                 else
                 {
@@ -849,12 +922,23 @@ namespace CourseWorkWPF
                     strl[t].Add(sgn2);
                     formula.Formula = $@"{ai}^x {sgn1} {bi}";
                     formula2.Formula = $@"{ci}^x {sgn2} {di}";
+                    formulas.Add(new List<string>());
+                    formulas[formulas.Count - 1].Add(formula.Formula);
+                    formulas[formulas.Count - 1].Add(formula2.Formula);
+
+                    // Запускаем кнопки отображения ответа
+                    Solve();
+                    var.Visibility = Visibility.Hidden;
+                    formulas[formulas.Count - 1].Add(var.Formula);
                 }
             }
             else
             {
                 if ((type = genList[rCount].Next(2)) == 1)
                 {
+                    strl.Add(new List<string>());
+                    cfl.Add(new List<double>());
+                    cfl[t].Add(1);
                     do
                     {
                         ai = genList[rCount].Next(1, 100) * 0.1;
@@ -871,12 +955,34 @@ namespace CourseWorkWPF
                         x4 = -(fi - 1) / ei;
                     } while (ai == 1 || di == 1 || !CheckLog(sgn1, sgn2, Math.Max(xx1, x2), x3, x4, ai, di) ||
                              x3 == x4);
-
+                    cfl[t].Add(ai);
+                    cfl[t].Add(bi);
+                    cfl[t].Add(ci);
+                    cfl[t].Add(di);
+                    cfl[t].Add(ei);
+                    cfl[t].Add(fi);
+                    cfl[t].Add(xx1);
+                    cfl[t].Add(x2);
+                    cfl[t].Add(x3);
+                    cfl[t].Add(x4);
+                    strl[t].Add(sgn1);
+                    strl[t].Add(sgn2);
                     formula.Formula = $@"log_{{{ai}}}({bi}x+{ci}) {sgn1} 0";
                     formula2.Formula = $@"log_{{{di}}}({ei}x+{fi}) {sgn2} 0";
+                    formulas.Add(new List<string>());
+                    formulas[formulas.Count - 1].Add(formula.Formula);
+                    formulas[formulas.Count - 1].Add(formula2.Formula);
+
+                    // Запускаем обработчик кнопки ">>"
+                    Solve();
+                    var.Visibility = Visibility.Hidden;
+                    formulas[formulas.Count - 1].Add(var.Formula);
                 }
                 else
                 {
+                    strl.Add(new List<string>());
+                    cfl.Add(new List<double>());
+                    cfl[t].Add(0);
                     do
                     {
                         ai = genList[rCount].Next(2, 30);
@@ -888,9 +994,24 @@ namespace CourseWorkWPF
                         x3 = Math.Log(bi, ai);
                         x4 = Math.Log(di, ci);
                     } while (x3 == x4 || !CheckLog2(sgn1, sgn2, x3, x4));
-
+                    cfl[t].Add(ai);
+                    cfl[t].Add(bi);
+                    cfl[t].Add(ci);
+                    cfl[t].Add(di);
+                    cfl[t].Add(x3);
+                    cfl[t].Add(x4);
+                    strl[t].Add(sgn1);
+                    strl[t].Add(sgn2);
                     formula.Formula = $@"{ai}^x {sgn1} {bi}";
                     formula2.Formula = $@"{ci}^x {sgn2} {di}";
+                    formulas.Add(new List<string>());
+                    formulas[formulas.Count - 1].Add(formula.Formula);
+                    formulas[formulas.Count - 1].Add(formula2.Formula);
+
+                    // Запускаем обработчик кнопки ">>"
+                    Solve();
+                    var.Visibility = Visibility.Hidden;
+                    formulas[formulas.Count - 1].Add(var.Formula);
                 }
             }
         }
@@ -911,6 +1032,7 @@ namespace CourseWorkWPF
             var.Visibility = Visibility.Hidden;
             bendtask.Visibility = Visibility.Hidden;
             bmmenu.Visibility = Visibility.Hidden;
+            bsave.Visibility = Visibility.Hidden;
         }
 
         // Обработчик клика кнопки ">>"
@@ -946,7 +1068,6 @@ namespace CourseWorkWPF
                 RestoreTask2();
                 formula.Formula = $"{a}x^2{b}x{c} {sgn1} {di}";
                 formula2.Formula = $"{e}x^2{f}x{g} {sgn2} {hi}";
-
             }
 
             if (cbox.Text == "3")
@@ -986,11 +1107,11 @@ namespace CourseWorkWPF
             }
             taskCount--;
             var.Visibility = Visibility.Hidden;
-            if (taskCount == 0)
+            if (taskCount == 1)
             {
                 bnext.Visibility = Visibility.Hidden;
                 bendtask.Visibility = Visibility.Visible;
-                //EndPr();
+                bsave.Visibility = Visibility.Visible;
             }
         }
 
@@ -1020,6 +1141,7 @@ namespace CourseWorkWPF
             // Обнуляем списки для хранения задач при новой генерации
             cfl = new List<List<double>>();
             strl = new List<List<string>>();
+            formulas = new List<List<string>>();
             t = 0;
             if (cbox.Text == "выберите сложность задач")
             {
@@ -1027,7 +1149,7 @@ namespace CourseWorkWPF
                 return;
             }
 
-            if (cbox2.Text == "выберите количество задач")
+            if (cbox2.Text == "Выберите количество задач")
             {
                 MessageBox.Show("Выберите количество задач!");
                 return;
@@ -1045,6 +1167,7 @@ namespace CourseWorkWPF
             ansbut.Visibility = Visibility.Visible;
             KeyBox.Text = "Введите ключ генерации...";
             int.TryParse(cbox2.Text, out taskCount);
+            staskcount = taskCount;
             if (cbox.Text == "1")
             {
                 GenTask1();
@@ -1061,10 +1184,9 @@ namespace CourseWorkWPF
             }
         }
 
-        // Обработчик кнопки "Показать ответ"
-        private void Button_Click_2(object sender, RoutedEventArgs m)
+        private void Solve()
         {
-            var.Visibility = Visibility.Visible;
+
             if (cbox.Text == "1")
             {
                 if (a == "") ai = 1;
@@ -2014,13 +2136,14 @@ namespace CourseWorkWPF
 
                         if (xx1 > x4)
                         {
+                            Console.WriteLine(cbox.Text);
                             var.Formula = $@"x\in (-\infty,{xx3})\cup({xx4},{xxx1})\cup({xx2},\infty)";
                         }
                     }
                 }
             }
 
-            if (cbox.Text == "3" && cfl[t][0]==1)
+            if (cbox.Text == "3" && cfl[t][0] == 1)
             {
                 string xx2, xx3, xx4;
                 if (-ci / bi > -fi / ei) xx2 = $@"\frac{{{-ci}}}{{{bi}}}";
@@ -2259,6 +2382,12 @@ namespace CourseWorkWPF
                     }
                 }
             }
+        }
+        // Обработчик кнопки "Показать ответ"
+        private void Button_Click_2(object sender, RoutedEventArgs m)
+        {
+            var.Visibility = Visibility.Visible;
+            Solve();
         }
 
         // Обработчики разворачивания и сворачивания combobox с выбором количества и сложности задач

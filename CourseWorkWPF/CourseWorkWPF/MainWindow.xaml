@@ -48,6 +48,7 @@
         <Button x:Name="bback" Content="&lt;&lt;" Grid.Column="1" Margin="5,146,0,0" VerticalAlignment="Top" Background="Orange" Click="Bback_Click" HorizontalAlignment="Left" Width="25"/>
         <Button x:Name="bendtask" Content="Закончить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="134" Grid.Column="1" Margin="260,146,0,0" Background="Orange" Click="Bendtask_Click"/>
         <Button x:Name="bmmenu" Content="Главное меню" HorizontalAlignment="Left" VerticalAlignment="Top" Width="108" Grid.Column="1" Margin="618,35,0,0" Background="#FFF06565" Click="Bmmenu_Click"/>
+        <Button x:Name="bsave" Content="Сохранить задачи в файл" Grid.Column="1" HorizontalAlignment="Left" Margin="35,171,0,0" VerticalAlignment="Top" Width="185" Background="#FF3DC1C7" Click="Bsave_Click"/>
 
     </Grid>
 
