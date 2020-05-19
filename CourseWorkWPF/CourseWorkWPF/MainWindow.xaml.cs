@@ -1168,6 +1168,12 @@ namespace CourseWorkWPF
             KeyBox.Text = "Введите ключ генерации...";
             int.TryParse(cbox2.Text, out taskCount);
             staskcount = taskCount;
+            if (taskCount == 1 && staskcount == 1)
+            {
+                bnext.Visibility = Visibility.Hidden;
+                bendtask.Visibility = Visibility.Visible;
+                bsave.Visibility = Visibility.Visible;
+            }
             if (cbox.Text == "1")
             {
                 GenTask1();
